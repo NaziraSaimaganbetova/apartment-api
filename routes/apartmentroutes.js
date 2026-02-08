@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { protect } = require('../middleware/authMiddleware'); // Добавь фигурные скобки {}
+const protect = require('../middleware/authMiddleware');
 const { createApartment, getApartments, getApartmentById, updateApartment, deleteApartment } = require('../controllers/apartmentController');
 
 router.post('/', protect, createApartment);
