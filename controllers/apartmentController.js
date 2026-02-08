@@ -57,3 +57,28 @@ exports.deleteApartment = async (req, res) => {
 
 // Аналогичную проверку владельца (if apartment.owner !== req.user.id) 
 // стоит добавить и в updateApartment!
+exports.getApartmentById = async (req, res) => {
+    try {
+        const apartment = await Apartment.findById(req.params.id);
+        if (!apartment) return res.status(404).json({ msg: 'Квартира не найдена' });
+        res.json(apartment);
+    } catch (err) {
+        res.status(500).send('Server error');
+    }
+};
+
+exports.updateApartment = async (req, res) => {
+    try {
+        let apartment = await Apartment.findById(req.params.id);
+        if (!apartment) return res.status(404).json({ msg: 'Квартира не найдена' });
+
+        if (apartment.owner.toString() !== req.user.id) {
+            return res.status(401).json({ msg: 'Нет прав на редактирование' });
+        }
+
+        apartment = await Apartment.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.json(apartment);
+    } catch (err) {
+        res.status(500).send('Server error');
+    }
+};
