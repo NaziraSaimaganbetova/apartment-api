@@ -1,16 +1,20 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors'); // 1. ДОБАВИТЬ ЭТО
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorMiddleware');
 
 const app = express();
+
+app.use(cors()); // 2. ДОБАВИТЬ ЭТО (разрешает запросы от фронтенда)
 app.use(express.static('public'));
+app.use(express.json());
+
 connectDB();
 
-app.use(express.json());
 // Routes
 app.use('/api/auth', require('./routes/authroutes'));
-app.use('/api/resource', require('./routes/apartmentroutes')); // Matches "Resource" requirements
+app.use('/api/resource', require('./routes/apartmentroutes'));
 
 app.use(errorHandler);
 
